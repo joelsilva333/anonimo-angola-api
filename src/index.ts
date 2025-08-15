@@ -1,16 +1,23 @@
+import "module-alias/register";
 import dotenv from "dotenv";
 import express from "express";
-import "./connection.ts"
+import cors from "cors";
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Servidor a rodar na porta ${PORT}`);
-});
-
-app.get("/", (req, res) => {
-  res.send("Servidor a rodar!");
-});
+import "@/database/connection";
+import routes from "./routes";
 
 dotenv.config();
+
+const PORT = process.env.PORT || 8080;
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(routes);
+
+app.listen(PORT, () => {
+  console.log(`Swagger docs: http://localhost:${PORT}/api-docs`);
+});
