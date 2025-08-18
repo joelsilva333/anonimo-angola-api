@@ -1,59 +1,91 @@
-import bcrypt from "bcrypt"
-import { UserRepository } from "@/repositories/user.repository"
-import { Request, Response } from "express"
-import jwt from "jsonwebtoken"
+import { Request, Response } from "express";
+import { plainToInstance } from "class-transformer";
+import { AuthLoginDTO } from "@/dto/auth.dto";
+import { validate } from "class-validator";
+import { AuthService } from "@/service/auth.service";
+import { CreateUserDTO } from "@/dto/user.dto";
+import { UserService } from "@/service/user.service";
 
 class AuthController {
-	private userRepository: UserRepository
+  private authService: AuthService;
+  private userService: UserService;
 
-	constructor() {
-		this.userRepository = new UserRepository()
-	}
+  constructor() {
+    this.authService = new AuthService();
+    this.userService = new UserService();
+  }
 
-	login = async (req: Request, res: Response): Promise<Response> => {
-		const { anon_name, password } = req.body
+  register = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const dto = plainToInstance(CreateUserDTO, req.body);
 
-		console.log("Senha digitada:", password)
+      const errors = await validate(dto);
+      if (errors.length > 0) {
+        return res.status(400).json({
+          error: "Erro de validação",
+          details: errors.map((error) => ({
+            property: error.property,
+            constraints: error.constraints,
+          })),
+        });
+      }
 
-		if (!anon_name || !password) {
-			return res
-				.status(400)
-				.json({ error: "Nome anônimo e palavra-passe são necessários" })
-		}
-		const user = await this.userRepository.findByAnonName(anon_name)
+      const user = await this.authService.register(dto);
 
-		if (!user) {
-			return res.status(404).json({ error: "Usuário não encontrado" })
-		}
+      return res.status(201).json({
+        message: "Usuário criado com sucesso",
+        user: {
+          id: user.id,
+          anon_name: user.anon_name,
+          phone_number: user.phone_number,
+          is_active: user.is_active,
+          created_at: user.created_at,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        error:
+          error instanceof Error ? error.message : "Erro interno do servidor",
+      });
+    }
+  };
 
-		console.log("Hash no banco:", user.password_hash)
+  login = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const dto = plainToInstance(AuthLoginDTO, req.body);
 
-		const validPassword = await bcrypt.compare(password, user.password_hash)
-		const test = await bcrypt.compare("bestrapper333@", user.password_hash)
+      const errors = await validate(dto);
+      if (errors.length > 0) {
+        return res.status(400).json({
+          error: "Erro de validação",
+          details: errors.map((error) => ({
+            property: error.property,
+            constraints: error.constraints,
+          })),
+        });
+      }
 
-		console.log("Senha válida teste:", test)
+      const user = await this.authService.login(dto);
 
-		if (!validPassword) {
-			return res.status(401).json({ error: "Senha inválida" })
-		}
-
-		const token = jwt.sign(
-			{ id: user.id, anon_name: user.anon_name },
-			process.env.JWT_SECRET as string,
-			{ expiresIn: "12h" }
-		)
-
-		return res.status(200).json({
-			message: "Sessão iniciada com sucesso",
-			user: {
-				id: user.id,
-				username: anon_name,
-				phone_number: user.phone_number,
-				is_active: user.is_active,
-			},
-			token,
-		})
-	}
+      return res.status(200).json({
+        message: "Sessão iniciada com sucesso",
+        user: {
+          id: user.user.id,
+          username: user.user.anon_name,
+          phone_number: user.user.phone_number,
+          is_active: user.user.is_active,
+        },
+        token: user.token,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        error:
+          error instanceof Error ? error.message : "Erro interno do servidor",
+      });
+    }
+  };
 }
 
-export default new AuthController()
+export default new AuthController();

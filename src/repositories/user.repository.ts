@@ -1,7 +1,6 @@
 import { User } from "@/entities/user.entity"
 import AppDataSource from "@/database/connection"
 import { Repository } from "typeorm"
-import bcrypt from "bcrypt"
 
 export class UserRepository {
 	private userRepository: Repository<User>
@@ -14,21 +13,7 @@ export class UserRepository {
 		return await this.userRepository.find()
 	}
 
-	async create(input: User): Promise<User> {
-		const existingUser = await this.userRepository.findOneBy({
-			anon_name: input.anon_name,
-		})
-
-		if (existingUser) {
-			throw new Error("Usuário já existe")
-		}
-
-		const user = new User()
-		user.anon_name = input.anon_name
-		user.password_hash = await bcrypt.hash(input.password_hash, 10)
-		user.phone_number = input.phone_number || ""
-		user.is_active = true
-
+	async create(user: User): Promise<User> {
 		return await this.userRepository.save(user)
 	}
 
@@ -38,5 +23,13 @@ export class UserRepository {
 
 	async findByAnonName(anon_name: string): Promise<User | null> {
 		return await this.userRepository.findOneBy({ anon_name })
+	}
+
+	async update(user: User): Promise<User> {
+		return await this.userRepository.save(user)
+	}
+
+	async delete(id: string): Promise<void> {
+		await this.userRepository.delete(id)
 	}
 }
