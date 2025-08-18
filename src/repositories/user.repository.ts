@@ -1,30 +1,42 @@
-import { User } from "@/entities/user.entity";
-import AppDataSource from "@/database/connection";
-import { Repository } from "typeorm";
-import bcrypt from "bcrypt";
+import { User } from "@/entities/user.entity"
+import AppDataSource from "@/database/connection"
+import { Repository } from "typeorm"
+import bcrypt from "bcrypt"
 
 export class UserRepository {
-  private userRepository: Repository<User>;
+	private userRepository: Repository<User>
 
-  constructor() {
-    this.userRepository = AppDataSource.getRepository(User);
-  }
+	constructor() {
+		this.userRepository = AppDataSource.getRepository(User)
+	}
 
-  async create(input: User): Promise<User> {
-    const existingUser = await this.userRepository.findOneBy({
-      anon_name: input.anon_name,
-    });
+	async findAll(): Promise<User[]> {
+		return await this.userRepository.find()
+	}
 
-    if (existingUser) {
-      throw new Error("Usuário já existe");
-    }
+	async create(input: User): Promise<User> {
+		const existingUser = await this.userRepository.findOneBy({
+			anon_name: input.anon_name,
+		})
 
-    const user = new User();
-    user.anon_name = input.anon_name;
-    user.password_hash = await bcrypt.hash(input.password_hash, 10);
-    user.phone_number = input.phone_number || "";
-    user.is_active = true;
+		if (existingUser) {
+			throw new Error("Usuário já existe")
+		}
 
-    return await this.userRepository.save(user);
-  }
+		const user = new User()
+		user.anon_name = input.anon_name
+		user.password_hash = await bcrypt.hash(input.password_hash, 10)
+		user.phone_number = input.phone_number || ""
+		user.is_active = true
+
+		return await this.userRepository.save(user)
+	}
+
+	async findById(id: string): Promise<User | null> {
+		return await this.userRepository.findOneBy({ id })
+	}
+
+	async findByAnonName(anon_name: string): Promise<User | null> {
+		return await this.userRepository.findOneBy({ anon_name })
+	}
 }
