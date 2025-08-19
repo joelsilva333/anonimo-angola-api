@@ -4,7 +4,7 @@ import { DataSource } from "typeorm"
 const AppDataSource = new DataSource({
 	type: "postgres",
 	host: "localhost",
-	port: 5433,
+	port: 5432,
 	username: "admin",
 	password: "admin",
 	database: "anonimo_angola",
