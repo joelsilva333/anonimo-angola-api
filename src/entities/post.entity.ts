@@ -4,6 +4,7 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { User } from "./user.entity";
 
@@ -17,6 +18,9 @@ export class Post {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 
   @ManyToOne(() => User, { onDelete: "CASCADE" })
   user: User;

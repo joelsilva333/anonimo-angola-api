@@ -1,4 +1,4 @@
-import { CreatePostDTO } from "@/dto/post.dto";
+import { CreatePostDTO, UpdatePostDTO } from "@/dto/post.dto";
 import { PostService } from "@/service/post.service";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
@@ -19,7 +19,7 @@ class PostController {
       const errors = await validate(dto);
       if (errors.length > 0) {
         return res.status(400).json({
-          error: "Validation error",
+          error: "Erro de validação",
           details: errors.map((error) => ({
             property: error.property,
             constraints: error.constraints,
@@ -31,7 +31,7 @@ class PostController {
 
       return res.status(201).json({
         id: post.id,
-        user: post.user.anon_name,
+        anon_name: post.user.anon_name,
         text: post.text,
         created_at: post.created_at,
         status: post.status,
@@ -44,6 +44,50 @@ class PostController {
     }
   };
 
+  updatePost = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const { id: userId } = req.anon_name;
+      const { id } = req.params;
+      const dto = plainToInstance(UpdatePostDTO, req.body);
+
+      const errors = await validate(dto);
+      if (errors.length > 0) {
+        return res.status(400).json({
+          error: "Erro de validação",
+          details: errors.map((error) => ({
+            property: error.property,
+            constraints: error.constraints,
+          })),
+        });
+      }
+
+      const post = await this.postService.update(userId, id, dto);
+      return res.status(200).json({
+        id: post.id,
+        anon_name: post.user.anon_name,
+        text: post.text,
+        created_at: post.created_at,
+        updated_at: post.updated_at,
+        status: post.status,
+      });
+    } catch (error) {
+      return res.status(500).json({ error: (error as Error).message });
+    }
+  };
+
+  deletePost = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const { id: userId } = req.anon_name;
+      const { id } = req.params;
+
+      await this.postService.delete(id, userId);
+
+      return res.status(204).send();
+    } catch (error) {
+      return res.status(500).json({ error: (error as Error).message });
+    }
+  };
+
   getAll = async (req: Request, res: Response): Promise<Response> => {
     try {
       const posts = await this.postService.findAll();
@@ -51,7 +95,7 @@ class PostController {
       return res.status(200).json(
         posts.map((post) => ({
           id: post.id,
-          user: post.user.anon_name,
+          anon_name: post.user.anon_name,
           text: post.text,
           created_at: post.created_at,
           status: post.status,
@@ -87,7 +131,7 @@ class PostController {
       return res.status(200).json(
         posts.map((post) => ({
           id: post.id,
-          user: post.user.anon_name,
+          anon_name: post.user.anon_name,
           text: post.text,
           created_at: post.created_at,
           status: post.status,

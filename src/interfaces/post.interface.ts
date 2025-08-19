@@ -3,5 +3,6 @@ export interface PostInterface {
   user: string;
   text: string;
   created_at: Date;
+  updated_at?: Date;
   status: "active" | "deleted" | "flagged";
 }

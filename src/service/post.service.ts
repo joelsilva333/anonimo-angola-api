@@ -1,4 +1,4 @@
-import { CreatePostDTO } from "@/dto/post.dto";
+import { CreatePostDTO, UpdatePostDTO } from "@/dto/post.dto";
 import { Post } from "@/entities/post.entity";
 import { PostInterface } from "@/interfaces/post.interface";
 import { PostRepository } from "@/repositories/post.repository";
@@ -35,7 +35,7 @@ export class PostService {
   }
 
   async findById(id: string): Promise<PostInterface> {
-    const post = await this.postRepository.findById(id);
+    const post = await this.postRepository.findByPostId(id);
 
     if (!post) {
       throw new Error("Postagem não encontrada");
@@ -46,6 +46,7 @@ export class PostService {
       user: post.user.anon_name,
       text: post.text,
       created_at: post.created_at,
+      updated_at: post.updated_at,
       status: post.status,
     };
   }
@@ -56,5 +57,29 @@ export class PostService {
       throw new Error("Usuário não encontrado");
     }
     return await this.postRepository.findAllByUserId(userId);
+  }
+
+  async update(
+    userId: string,
+    postId: string,
+    dto: UpdatePostDTO
+  ): Promise<Post> {
+    const post = await this.postRepository.findByPostId(postId);
+    if (!post) throw new Error("Post não encontrado");
+
+    if (post.user.id !== userId) throw new Error("Não autorizado");
+
+    post.text = dto.text ?? post.text;
+    post.status = dto.status ?? post.status;
+
+    return await this.postRepository.update(post);
+  }
+
+  async delete(postId: string, userId: string): Promise<void> {
+    const post = await this.postRepository.findByPostId(postId);
+    if (!post) throw new Error("Post não encontrado");
+
+    if (post.user.id !== userId) throw new Error("Não autorizado");
+    await this.postRepository.delete(postId);
   }
 }
