@@ -1,8 +1,5 @@
 /* import swaggerUi from "swagger-ui-express"
 import { swaggerSpec } from "@/swagger" */
-import authController from "@/controllers/auth.controller";
-import userController from "@/controllers/user.controller";
-import { authMiddleware } from "@/middleware/auth.middleware";
 import { Router, Response, Request } from "express";
 import authRoutes from "./auth.routes";
 import userRoutes from "./user.routes";

@@ -6,5 +6,7 @@ const router = Router();
 
 router.post("/:id", authMiddleware, postController.create);
 router.get("/", authMiddleware, postController.getAll);
+router.get("/:id", authMiddleware, postController.getById);
+router.get("/user/:userId", authMiddleware, postController.getAllByUserId);
 
 export default router;

@@ -14,7 +14,18 @@ export class PostRepository {
   }
 
   async findById(id: string): Promise<Post | null> {
-    return await this.postRepository.findOneBy({ id });
+    return await this.postRepository.findOne({
+      where: { id },
+      relations: ["user"],
+    });
+  }
+
+  async findAllByUserId(userId: string): Promise<Post[]> {
+    return await this.postRepository.find({
+      where: { user: { id: userId } },
+      relations: ["user"],
+      order: { created_at: "DESC" },
+    });
   }
 
   async findAll(): Promise<Post[]> {

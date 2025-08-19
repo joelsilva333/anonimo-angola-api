@@ -30,14 +30,11 @@ class PostController {
       const post = await this.postService.create(dto, id);
 
       return res.status(201).json({
-        message: "Postagem criada com sucesso",
-        post: {
-          id: post.id,
-          user: post.user.anon_name,
-          text: post.text,
-          created_at: post.created_at,
-          status: post.status,
-        },
+        id: post.id,
+        user: post.user.anon_name,
+        text: post.text,
+        created_at: post.created_at,
+        status: post.status,
       });
     } catch (error) {
       console.error(error);
@@ -50,6 +47,42 @@ class PostController {
   getAll = async (req: Request, res: Response): Promise<Response> => {
     try {
       const posts = await this.postService.findAll();
+
+      return res.status(200).json(
+        posts.map((post) => ({
+          id: post.id,
+          user: post.user.anon_name,
+          text: post.text,
+          created_at: post.created_at,
+          status: post.status,
+        }))
+      );
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        error: error instanceof Error ? error.message : "Internal server error",
+      });
+    }
+  };
+
+  getById = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const { id } = req.params;
+      const post = await this.postService.findById(id);
+
+      return res.status(200).json(post);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        error: error instanceof Error ? error.message : "Internal server error",
+      });
+    }
+  };
+
+  getAllByUserId = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const { userId } = req.params;
+      const posts = await this.postService.findAllByUserId(userId);
 
       return res.status(200).json(
         posts.map((post) => ({

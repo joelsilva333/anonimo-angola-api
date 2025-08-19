@@ -6,3 +6,5 @@ export class CreatePostDTO {
   @MinLength(10)
   text: string;
 }
+
+export class UpdatePostDTO extends CreatePostDTO {}
