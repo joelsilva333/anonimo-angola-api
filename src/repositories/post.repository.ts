@@ -13,8 +13,25 @@ export class PostRepository {
     return await this.postRepository.save(post);
   }
 
-  async findById(id: string): Promise<Post | null> {
-    return await this.postRepository.findOneBy({ id });
+  async findByPostId(id: string): Promise<Post | null> {
+    return await this.postRepository.findOne({
+      where: { id },
+      relations: ["user"],
+    });
+  }
+
+  async findPostByUserId(postId: string, userId: string): Promise<Post | null> {
+    return await this.postRepository.findOne({
+      where: { id: postId, user: { id: userId } },
+    });
+  }
+
+  async findAllByUserId(userId: string): Promise<Post[]> {
+    return await this.postRepository.find({
+      where: { user: { id: userId } },
+      relations: ["user"],
+      order: { created_at: "DESC" },
+    });
   }
 
   async findAll(): Promise<Post[]> {

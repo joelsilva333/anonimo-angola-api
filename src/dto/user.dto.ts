@@ -18,7 +18,7 @@ export class CreateUserDTO {
   @IsString()
   @MinLength(6)
   @MaxLength(60)
-  password_hash: string;
+  password: string;
 
   @IsString()
   @MaxLength(15)
