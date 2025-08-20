@@ -2,7 +2,6 @@ import "module-alias/register";
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-
 import "@/database/connection";
 import routes from "./routes";
 
