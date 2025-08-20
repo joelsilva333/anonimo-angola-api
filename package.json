@@ -30,6 +30,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node-dev --transpile-only src/index.ts",
+    "render": "yarn build && yarn start",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js -d src/database/connection.ts"
   },
   "_moduleAliases": {
