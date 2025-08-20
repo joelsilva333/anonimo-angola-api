@@ -30,7 +30,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node-dev --transpile-only src/index.ts",
-    "render": "yarn build && yarn migration:run && yarn start",
+    "render": "yarn build && yarn migration:generate && yarn migration:run && yarn start",
     "migration:generate": "typeorm migration:generate src/migrations/UltimasAtualizações -d dist/database/connection.js",
     "migration:run": "typeorm migration:run -d dist/database/connection.js",
     "migration:generate:dev": "ts-node ./node_modules/typeorm/cli.js migration:generate src/migrations/UltimasAtualizações -d src/database/connection.ts",
