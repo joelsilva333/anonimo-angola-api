@@ -35,6 +35,6 @@
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js -d src/database/connection.ts"
   },
   "_moduleAliases": {
-    "@": "src"
+    "@": "dist"
   }
 }
