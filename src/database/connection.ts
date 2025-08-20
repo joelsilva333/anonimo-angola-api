@@ -11,7 +11,8 @@ const AppDataSource = new DataSource({
   password: `${process.env.DB_PASSWORD}`,
   database: process.env.DB_NAME,
   logging: true,
-  synchronize: true,
+  synchronize: !isProd,
+  migrationsRun: true,
   ssl:
     process.env.NODE_ENV === "production"
       ? { rejectUnauthorized: false }
@@ -21,7 +22,11 @@ const AppDataSource = new DataSource({
       ? __dirname + "/../**/*.entity.js"
       : __dirname + "/../**/*.entity.ts",
   ],
-  migrations: [__dirname + "/../migrations/*.ts"],
+  migrations: [
+    isProd
+      ? __dirname + "/../migrations/*.js"
+      : __dirname + "/../migrations/*.ts",
+  ],
   subscribers: [],
 });
 
