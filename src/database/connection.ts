@@ -10,6 +10,10 @@ const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   logging: true,
   synchronize: true,
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : false,
   entities: [__dirname + "/../**/*.entity.ts"],
   migrations: [__dirname + "/../migrations/*.ts"],
   subscribers: [],
