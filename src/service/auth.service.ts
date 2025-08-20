@@ -23,7 +23,7 @@ export class AuthService {
 
     const user = new User();
     user.anon_name = input.anon_name;
-    user.password_hash = await bcrypt.hash(input.password_hash, 10);
+    user.password_hash = await bcrypt.hash(input.password, 10);
     user.phone_number = input.phone_number || "";
 
     return await this.userRepository.create(user);

@@ -9,19 +9,32 @@ declare global {
   }
 }
 
+interface JwtPayload {
+  id: string;
+  anon_name: string;
+}
+
 export const authMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const authHeader = req.headers.authorization;
-
-  if (!authHeader) return res.status(401).json({ error: "Token não fornecido" });
+  if (!authHeader)
+    return res.status(401).json({ error: "Token não fornecido" });
 
   const [, token] = authHeader.split(" ");
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET as string
+    ) as JwtPayload;
+
+    if (!decoded.id) {
+      return res.status(401).json({ error: "Token inválido" });
+    }
+
     req.anon_name = decoded;
     next();
   } catch {
