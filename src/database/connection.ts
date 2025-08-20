@@ -1,6 +1,8 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 
+const isProd = process.env.NODE_ENV === "production";
+
 const AppDataSource = new DataSource({
   type: "postgres",
   host: process.env.DB_HOST,
@@ -14,7 +16,11 @@ const AppDataSource = new DataSource({
     process.env.NODE_ENV === "production"
       ? { rejectUnauthorized: false }
       : false,
-  entities: [__dirname + "/../**/*.entity.ts"],
+  entities: [
+    isProd
+      ? __dirname + "/../**/*.entity.js"
+      : __dirname + "/../**/*.entity.ts",
+  ],
   migrations: [__dirname + "/../migrations/*.ts"],
   subscribers: [],
 });
