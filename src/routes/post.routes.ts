@@ -35,25 +35,24 @@ const router = Router();
  *       201:
  *         description: Post criado com sucesso
  *         content:
- *          application/json:
- *           schema:
- *            type: object
- *           properties:
- *              id:
- *               type: string
- *              anon_name:
- *              type: string
- *             text:
- *             type: string
- *              created_at:
- *              type: string
- *              status:
- *             type: string
- *       500:
- *         description: Erro interno do servidor
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 anon_name:
+ *                   type: string
+ *                 text:
+ *                   type: string
+ *                 created_at:
+ *                   type: string
+ *                 status:
+ *                   type: string
  *       400:
  *         description: Erro de validação
- *
+ *       500:
+ *         description: Erro interno do servidor
  */
 router.post("/:id", authMiddleware, postController.create);
 
@@ -114,8 +113,8 @@ router.get("/:id", authMiddleware, postController.getById);
  *     responses:
  *       200:
  *         description: Lista de posts do usuário
- *      500:
- *        description: Erro interno do servidor
+ *       500:
+ *         description: Erro interno do servidor
  */
 router.get("/user/:userId", authMiddleware, postController.getAllByUserId);
 

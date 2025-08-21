@@ -69,9 +69,10 @@ router.post("/login", authController.login);
  *         description: Usuário criado com sucesso
  *       500:
  *         description: Erro ao criar usuário
- * *       400:
- *        description: Erro de validação
+ *       400:
+ *         description: Erro de validação
  */
+
 router.post("/register", authController.register);
 
 export default router;
