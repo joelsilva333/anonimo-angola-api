@@ -1,13 +1,9 @@
-/* import swaggerUi from "swagger-ui-express"
-import { swaggerSpec } from "@/swagger" */
 import { Router, Response, Request } from "express";
 import authRoutes from "./auth.routes";
 import userRoutes from "./user.routes";
 import postRoutes from "./post.routes";
 
 const routes = Router();
-
-/* routes.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec)) */
 
 routes.use("/api/auth", authRoutes);
 routes.use("/api/users", userRoutes);
