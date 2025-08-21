@@ -13,6 +13,39 @@ const router = Router();
 
 /**
 * @swagger
+* components:
+*   schemas:
+*     User:
+*       type: object
+*       properties:
+*         id:
+*           type: string
+*           example: "d93b3e28-56f9-4a92-9d01-5f91b2c3e001"
+*         anon_name:
+*           type: string
+*           example: "Anon123"
+*         phone_number:
+*           type: string
+*           example: "+5511999999999"
+*         role:
+*           type: string
+*           example: "user"
+*         is_active:
+*           type: boolean
+*           example: true
+*     UpdateUserInput:
+*       type: object
+*       properties:
+*         anon_name:
+*           type: string
+*           example: "Anon987"
+*         phone_number:
+*           type: string
+*           example: "+5511888888888"
+*/
+
+/**
+* @swagger
 * /users/{id}:
 *   get:
 *     summary: Buscar um usuário por ID
@@ -29,6 +62,10 @@ const router = Router();
 *     responses:
 *       200:
 *         description: Usuário encontrado
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/User'
 *       500:
 *         description: Erro interno do servidor
 */
@@ -54,15 +91,20 @@ router.get("/:id", authMiddleware, userController.getUserById);
 *       content:
 *         application/json:
 *           schema:
-*             type: object
-*             properties:
-*               anon_name:
-*                 type: string
-*               phone_number:
-*                 type: string
+*             $ref: '#/components/schemas/UpdateUserInput'
 *     responses:
 *       200:
 *         description: Usuário atualizado com sucesso
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: "Usuário atualizado com sucesso"
+*                 user:
+*                   $ref: '#/components/schemas/User'
 *       400:
 *         description: Erro de validação
 *       500:
@@ -104,6 +146,12 @@ router.delete("/:id", authMiddleware, userController.deleteUser);
 *     responses:
 *       200:
 *         description: Lista de usuários
+*         content:
+*           application/json:
+*             schema:
+*               type: array
+*               items:
+*                 $ref: '#/components/schemas/User'
 *       500:
 *         description: Erro interno do servidor
 */

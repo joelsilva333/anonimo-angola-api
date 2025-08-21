@@ -6,6 +6,13 @@ const router = Router();
 
 /**
  * @swagger
+ * tags:
+ *   name: Posts
+ *   description: Gerenciamento de posts
+ */
+
+/**
+ * @swagger
  * /posts/{id}:
  *   post:
  *     summary: Criar um novo post
@@ -41,16 +48,30 @@ const router = Router();
  *               properties:
  *                 id:
  *                   type: string
+ *                   example: "abc123"
  *                 anon_name:
  *                   type: string
+ *                   example: "joel123"
  *                 text:
  *                   type: string
+ *                   example: "Hoje estou me sentindo melhor."
  *                 created_at:
  *                   type: string
+ *                   format: date-time
+ *                   example: "2025-08-21T14:15:22.000Z"
  *                 status:
  *                   type: string
+ *                   example: "active"
  *       400:
  *         description: Erro de validação
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: "Erro de validação"
+ *               details:
+ *                 - property: "text"
+ *                   constraints:
+ *                     isNotEmpty: "text não pode estar vazio"
  *       500:
  *         description: Erro interno do servidor
  */
@@ -67,6 +88,29 @@ router.post("/:id", authMiddleware, postController.create);
  *     responses:
  *       200:
  *         description: Lista de posts
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "abc123"
+ *                   anon_name:
+ *                     type: string
+ *                     example: "joel123"
+ *                   text:
+ *                     type: string
+ *                     example: "Hoje estou me sentindo melhor."
+ *                   created_at:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2025-08-21T14:15:22.000Z"
+ *                   status:
+ *                     type: string
+ *                     example: "active"
  *       500:
  *         description: Erro interno do servidor
  */
@@ -90,6 +134,26 @@ router.get("/", authMiddleware, postController.getAll);
  *     responses:
  *       200:
  *         description: Post encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: "abc123"
+ *                 anon_name:
+ *                   type: string
+ *                   example: "joel123"
+ *                 text:
+ *                   type: string
+ *                   example: "Hoje estou me sentindo melhor."
+ *                 created_at:
+ *                   type: string
+ *                   example: "2025-08-21T14:15:22.000Z"
+ *                 status:
+ *                   type: string
+ *                   example: "active"
  *       500:
  *         description: Erro interno do servidor
  */
@@ -113,6 +177,23 @@ router.get("/:id", authMiddleware, postController.getById);
  *     responses:
  *       200:
  *         description: Lista de posts do usuário
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   anon_name:
+ *                     type: string
+ *                   text:
+ *                     type: string
+ *                   created_at:
+ *                     type: string
+ *                   status:
+ *                     type: string
  *       500:
  *         description: Erro interno do servidor
  */
@@ -146,10 +227,35 @@ router.get("/user/:userId", authMiddleware, postController.getAllByUserId);
  *     responses:
  *       200:
  *         description: Post atualizado com sucesso
- *       500:
- *         description: Erro interno do servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: "abc123"
+ *                 anon_name:
+ *                   type: string
+ *                   example: "joel123"
+ *                 text:
+ *                   type: string
+ *                   example: "Texto atualizado do post."
+ *                 created_at:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2025-08-21T14:15:22.000Z"
+ *                 updated_at:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2025-08-21T15:00:00.000Z"
+ *                 status:
+ *                   type: string
+ *                   example: "active"
  *       400:
  *         description: Erro de validação
+ *       500:
+ *         description: Erro interno do servidor
  */
 router.put("/:id", authMiddleware, postController.updatePost);
 

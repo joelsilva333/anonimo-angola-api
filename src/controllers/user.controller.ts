@@ -6,11 +6,9 @@ import { UpdateUserDTO } from "@/dto/user.dto";
 import { plainToInstance } from "class-transformer";
 
 class UserController {
-  private userRepository: UserRepository;
   private userService: UserService;
 
   constructor() {
-    this.userRepository = new UserRepository();
     this.userService = new UserService();
   }
 
