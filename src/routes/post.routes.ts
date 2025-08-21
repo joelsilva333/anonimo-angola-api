@@ -34,12 +34,29 @@ const router = Router();
  *     responses:
  *       201:
  *         description: Post criado com sucesso
+ *         content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *           properties:
+ *              id:
+ *               type: string
+ *              anon_name:
+ *              type: string
+ *             text:
+ *             type: string
+ *              created_at:
+ *              type: string
+ *              status:
+ *             type: string
+ *       500:
+ *         description: Erro interno do servidor
  *       400:
  *         description: Erro de validação
- *       401:
- *         description: Não autorizado
+ *
  */
 router.post("/:id", authMiddleware, postController.create);
+
 /**
  * @swagger
  * /posts:
@@ -51,8 +68,11 @@ router.post("/:id", authMiddleware, postController.create);
  *     responses:
  *       200:
  *         description: Lista de posts
+ *       500:
+ *         description: Erro interno do servidor
  */
 router.get("/", authMiddleware, postController.getAll);
+
 /**
  * @swagger
  * /posts/{id}:
@@ -71,10 +91,11 @@ router.get("/", authMiddleware, postController.getAll);
  *     responses:
  *       200:
  *         description: Post encontrado
- *       404:
- *         description: Post não encontrado
+ *       500:
+ *         description: Erro interno do servidor
  */
 router.get("/:id", authMiddleware, postController.getById);
+
 /**
  * @swagger
  * /posts/user/{userId}:
@@ -93,8 +114,11 @@ router.get("/:id", authMiddleware, postController.getById);
  *     responses:
  *       200:
  *         description: Lista de posts do usuário
+ *      500:
+ *        description: Erro interno do servidor
  */
 router.get("/user/:userId", authMiddleware, postController.getAllByUserId);
+
 /**
  * @swagger
  * /posts/{id}:
@@ -123,10 +147,13 @@ router.get("/user/:userId", authMiddleware, postController.getAllByUserId);
  *     responses:
  *       200:
  *         description: Post atualizado com sucesso
+ *       500:
+ *         description: Erro interno do servidor
  *       400:
  *         description: Erro de validação
  */
 router.put("/:id", authMiddleware, postController.updatePost);
+
 /**
  * @swagger
  * /posts/{id}:
@@ -145,6 +172,8 @@ router.put("/:id", authMiddleware, postController.updatePost);
  *     responses:
  *       204:
  *         description: Post deletado com sucesso
+ *       500:
+ *        description: Erro interno do servidor
  */
 router.delete("/:id", authMiddleware, postController.deletePost);
 

@@ -3,7 +3,6 @@ import authController from "@/controllers/auth.controller";
 
 const router = Router();
 
-
 /**
  * @swagger
  * tags:
@@ -33,9 +32,11 @@ const router = Router();
  *                 type: string
  *     responses:
  *       200:
- *         description: Login realizado com sucesso
- *       401:
- *         description: Credenciais inválidas
+ *         description: Sessão iniciada com sucesso
+ *       500:
+ *         description: Erro ao iniciar sessão
+ *       400:
+ *        description: Erro de validação
  */
 
 router.post("/login", authController.login);
@@ -66,8 +67,10 @@ router.post("/login", authController.login);
  *     responses:
  *       201:
  *         description: Usuário criado com sucesso
- *       400:
- *         description: Erro de validação
+ *       500:
+ *         description: Erro ao criar usuário
+ * *       400:
+ *        description: Erro de validação
  */
 router.post("/register", authController.register);
 

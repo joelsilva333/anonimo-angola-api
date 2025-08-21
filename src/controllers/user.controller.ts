@@ -72,29 +72,6 @@ class UserController {
     }
   };
 
-  getUser = async (req: Request, res: Response): Promise<Response> => {
-    try {
-      const userId = req.params.id;
-      const user = await this.userRepository.findById(userId);
-
-      if (!user) {
-        return res.status(404).json({ error: "Usuário não encontrado" });
-      }
-
-      return res.status(200).json({
-        id: user.id,
-        anon_name: user.anon_name,
-        phone_number: user.phone_number,
-        is_active: user.is_active,
-      });
-    } catch (error) {
-      console.error(error);
-      return res
-        .status(500)
-        .json({ error: "Ocorreu um erro ao buscar usuário" });
-    }
-  };
-
   getAllUsers = async (req: Request, res: Response): Promise<Response> => {
     try {
       const users = await this.userService.find();

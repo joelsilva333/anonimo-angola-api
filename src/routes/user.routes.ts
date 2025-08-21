@@ -10,7 +10,31 @@ const router = Router();
  *   name: Users
  *   description: Gerenciamento de usuários
  */
+
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Buscar um usuário por ID
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID do usuário a ser buscado
+ *     responses:
+ *       200:
+ *         description: Usuário encontrado
+ *       500:
+ *        description: Erro interno do servidor
+ */
 router.get("/:id", authMiddleware, userController.getUserById);
+
 /**
  * @swagger
  * /users/{id}:
@@ -42,8 +66,11 @@ router.get("/:id", authMiddleware, userController.getUserById);
  *         description: Usuário atualizado com sucesso
  *       400:
  *         description: Erro de validação
+ *      500:
+ *        description: Erro interno do servidor
  */
 router.put("/:id", authMiddleware, userController.updateUser);
+
 /**
  * @swagger
  * /users/{id}:
@@ -62,8 +89,11 @@ router.put("/:id", authMiddleware, userController.updateUser);
  *     responses:
  *       204:
  *         description: Usuário deletado com sucesso
+ *       500:
+ *        description: Erro interno do servidor
  */
 router.delete("/:id", authMiddleware, userController.deleteUser);
+
 /**
  * @swagger
  * /users:
@@ -75,6 +105,8 @@ router.delete("/:id", authMiddleware, userController.deleteUser);
  *     responses:
  *       200:
  *         description: Lista de usuários
+ *       500:
+ *         description: Erro interno do servidor
  */
 router.get("/", authMiddleware, userController.getAllUsers);
 
