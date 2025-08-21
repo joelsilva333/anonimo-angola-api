@@ -37,6 +37,8 @@ class UserController {
           anon_name: updatedUser.anon_name,
           phone_number: updatedUser.phone_number,
           role: updatedUser.role,
+          created_at: updatedUser.created_at,
+          last_login_at: updatedUser.last_login_at,
           is_active: updatedUser.is_active,
         },
       });
@@ -59,6 +61,8 @@ class UserController {
         anon_name: user.anon_name,
         phone_number: user.phone_number,
         role: user.role,
+        created_at: user.created_at,
+        last_login_at: user.last_login_at,
         is_active: user.is_active,
       });
     } catch (error) {
