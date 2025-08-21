@@ -13,8 +13,11 @@ export function setupSwagger(app: Express) {
       },
       servers: [
         {
-          url: "https://anonimo-angola-api.onrender.com",
-          description: "Servidor Local",
+          url: process.env.NODE_ENV === "production"
+            ? "https://anonimo-angola-api.onrender.com"
+            : "http://localhost:8080",
+          description:
+            process.env.NODE_ENV === "production" ? "Servidor Render" : "Servidor Local",
         },
       ],
       components: {
@@ -28,7 +31,11 @@ export function setupSwagger(app: Express) {
       },
       security: [{ bearerAuth: [] }],
     },
-    apis: ["./src/routes/*.ts"],
+    apis: [
+      process.env.NODE_ENV === "production"
+        ? "./dist/routes/*.js"
+        : "./src/routes/*.ts",
+    ],
   };
 
   const swaggerDocs = swaggerJsdoc(swaggerOptions);
