@@ -3,6 +3,8 @@ import { Post } from "@/entities/post.entity";
 import { PostInterface } from "@/interfaces/post.interface";
 import { PostRepository } from "@/repositories/post.repository";
 import { UserRepository } from "@/repositories/user.repository";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const leoProfanity: any = require("leo-profanity");
 
 export class PostService {
   private postRepository: PostRepository;
@@ -11,6 +13,36 @@ export class PostService {
   constructor() {
     this.postRepository = new PostRepository();
     this.userRepository = new UserRepository();
+
+    if (!leoProfanity.isLoaded("pt")) {
+      leoProfanity.loadDictionary("pt" as any);
+    }
+
+    // Palavras adicionais específicas (exemplo Angola/PT)
+    leoProfanity.add([
+      "merdoso",
+      "xenófobo",
+      "otário",
+      "puta",
+      "cona",
+      "xobota",
+      "chuchuta",
+      "xuxuta",
+      "kona",
+      "liamba",
+      "foda",
+      "fodi",
+      "fdd",
+      "cú",
+      "cu",
+      "pila",
+      "baga",
+      "cuno",
+      "cunei",
+      "bandida",
+      "suja",
+      "sujo",
+    ]);
   }
 
   async create(input: CreatePostDTO, id: string): Promise<Post> {
@@ -23,7 +55,7 @@ export class PostService {
     const post = new Post();
 
     post.user = user;
-    post.text = input.text;
+    post.text = leoProfanity.clean(input.text);
     post.created_at = new Date();
     post.status = "active";
 
@@ -69,7 +101,10 @@ export class PostService {
 
     if (post.user.id !== userId) throw new Error("Não autorizado");
 
-    post.text = dto.text ?? post.text;
+    if (dto.text) {
+      post.text = leoProfanity.clean(dto.text);
+    }
+
     post.status = dto.status ?? post.status;
 
     return await this.postRepository.update(post);
