@@ -3,8 +3,7 @@ import { Post } from "@/entities/post.entity";
 import { PostInterface } from "@/interfaces/post.interface";
 import { PostRepository } from "@/repositories/post.repository";
 import { UserRepository } from "@/repositories/user.repository";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const leoProfanity: any = require("leo-profanity");
+import leoProfanity from "leo-profanity";
 
 export class PostService {
   private postRepository: PostRepository;
@@ -14,11 +13,8 @@ export class PostService {
     this.postRepository = new PostRepository();
     this.userRepository = new UserRepository();
 
-    if (!leoProfanity.isLoaded("pt")) {
-      leoProfanity.loadDictionary("pt" as any);
-    }
+    leoProfanity.loadDictionary("pt" as any);
 
-    // Palavras adicionais específicas (exemplo Angola/PT)
     leoProfanity.add([
       "merdoso",
       "xenófobo",
