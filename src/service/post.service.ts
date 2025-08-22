@@ -4,6 +4,7 @@ import { PostInterface } from "@/interfaces/post.interface";
 import { PostRepository } from "@/repositories/post.repository";
 import { UserRepository } from "@/repositories/user.repository";
 import leoProfanity from "leo-profanity";
+import { badWords } from "../config/bad-word";
 
 export class PostService {
   private postRepository: PostRepository;
@@ -15,30 +16,7 @@ export class PostService {
 
     leoProfanity.loadDictionary("pt" as any);
 
-    leoProfanity.add([
-      "merdoso",
-      "xenófobo",
-      "otário",
-      "puta",
-      "cona",
-      "xobota",
-      "chuchuta",
-      "xuxuta",
-      "kona",
-      "liamba",
-      "foda",
-      "fodi",
-      "fdd",
-      "cú",
-      "cu",
-      "pila",
-      "baga",
-      "cuno",
-      "cunei",
-      "bandida",
-      "suja",
-      "sujo",
-    ]);
+    leoProfanity.add(badWords);
   }
 
   async create(input: CreatePostDTO, id: string): Promise<Post> {
