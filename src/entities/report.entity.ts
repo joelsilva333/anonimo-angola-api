@@ -7,7 +7,7 @@ import {
 } from "typeorm";
 import { User } from "./user.entity";
 
-@Entity("reports")
+@Entity()
 export class Report {
   @PrimaryGeneratedColumn("uuid")
   id: string;
