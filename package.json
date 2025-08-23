@@ -45,6 +45,6 @@
 		"migration:revert": "yarn typeorm migration:revert -d src/database/connection.ts"
 	},
 	"_moduleAliases": {
-		"@": "src"
+		"@": "dist"
 	}
 }
