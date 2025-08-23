@@ -38,7 +38,7 @@
 		"build": "tsc",
 		"start": "node dist/index.js",
 		"dev": "ts-node-dev --transpile-only src/index.ts",
-		"render": "yarn build && yarn migration:run && yarn start",
+		"render": "yarn install --production=false && yarn build && yarn migration:run && yarn start",
 		"typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli",
 		"migration:generate": "yarn typeorm migration:generate -d src/database/connection.ts src/migrations/NewMigration",
 		"migration:run": "yarn typeorm migration:run -d src/database/connection.ts",
