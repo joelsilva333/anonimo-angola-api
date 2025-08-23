@@ -4,7 +4,7 @@ import { PostInterface } from "@/interfaces/post.interface";
 import { PostRepository } from "@/repositories/post.repository";
 import { UserRepository } from "@/repositories/user.repository";
 import leoProfanity from "leo-profanity";
-import { badWords } from "../config/bad-word";
+import { badWords } from "../utils/bad-word";
 
 export class PostService {
   private postRepository: PostRepository;

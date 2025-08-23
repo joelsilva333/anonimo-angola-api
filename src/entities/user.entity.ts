@@ -1,39 +1,42 @@
 import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+	Column,
+	CreateDateColumn,
+	Entity,
+	PrimaryGeneratedColumn,
+} from "typeorm"
 
-export type UserRole = "user" | "admin";
+export type UserRole = "user" | "admin"
 
-@Entity()
+@Entity("users")
 export class User {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
+	@PrimaryGeneratedColumn("uuid")
+	id: string
 
-  @Column()
-  anon_name: string;
+	@Column()
+	anon_name: string
 
-  @Column()
-  password_hash: string;
+	@Column()
+	profile_picture: string
 
-  @Column({ default: true })
-  is_active: boolean;
+	@Column()
+	password_hash: string
 
-  @Column({ type: "timestamp", nullable: true })
-  last_login_at: Date;
+	@Column({ default: true })
+	is_active: boolean
 
-  @CreateDateColumn()
-  created_at: Date;
+	@Column({ type: "timestamp", nullable: true })
+	last_login_at: Date
 
-  @Column()
-  phone_number: string;
+	@CreateDateColumn()
+	created_at: Date
 
-  @Column({
-    type: "enum",
-    enum: ["user", "admin"],
-    default: "user",
-  })
-  role: UserRole;
+	@Column()
+	phone_number: string
+
+	@Column({
+		type: "enum",
+		enum: ["user", "admin"],
+		default: "user",
+	})
+	role: UserRole
 }

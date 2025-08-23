@@ -1,110 +1,93 @@
-import { User } from "@/entities/user.entity";
-import bcrypt from "bcrypt";
-import { UserRepository } from "@/repositories/user.repository";
-import { CreateUserDTO, UpdateUserDTO } from "@/dto/user.dto";
+import { User } from "@/entities/user.entity"
+import bcrypt from "bcrypt"
+import { UserRepository } from "@/repositories/user.repository"
+import { CreateUserDTO, UpdateUserDTO } from "@/dto/user.dto"
+import { getRandomAvatar } from "@/utils/random-avatar"
 
 export class UserService {
-  private userRepository: UserRepository;
+	private userRepository: UserRepository
 
-  constructor() {
-    this.userRepository = new UserRepository();
-  }
+	constructor() {
+		this.userRepository = new UserRepository()
+	}
 
-  async createUser(input: CreateUserDTO): Promise<User> {
-    if (!input.anon_name || input.anon_name.trim().length === 0) {
-      throw new Error("Nome de usuário não pode estar vazio");
-    }
+	async findById(id: string): Promise<User> {
+		const user = await this.userRepository.findById(id)
 
-    if (!input.password) {
-      throw new Error("Senha obrigatória");
-    }
+		if (!user) {
+			throw new Error("Usuário não encontrado")
+		}
 
-    const existingUser = await this.userRepository.findByAnonName(
-      input.anon_name
-    );
-    if (existingUser) {
-      throw new Error("Usuário já existe");
-    }
+		return user
+	}
 
-    if (input.phone_number) {
-      const existingPhone = await this.userRepository.findByPhoneNumber(
-        input.phone_number
-      );
-      if (existingPhone) {
-        throw new Error("Número de telefone já em uso");
-      }
-    }
+	async find(): Promise<
+		{
+			id: string
+			anon_name: string
+			phone_number: string
+			created_at: Date
+			is_active: boolean
+		}[]
+	> {
+		const baseUrl = process.env.BASE_URL || "http://localhost:8080/public"
+		const users = await this.userRepository.findAll()
 
-    const user = new User();
-    user.anon_name = input.anon_name;
-    user.password_hash = await bcrypt.hash(input.password, 10);
-    user.phone_number = input.phone_number || "";
-    user.role = "user";
+		return users.map((user) => ({
+			id: user.id,
+			anon_name: user.anon_name,
+			phone_number: user.phone_number,
+			profile_picture: `${baseUrl}/${user.profile_picture}`,
+			created_at: user.created_at,
+			is_active: user.is_active,
+		}))
+	}
 
-    return await this.userRepository.create(user);
-  }
+	async update(id: string, input: UpdateUserDTO): Promise<User> {
+		const user = await this.userRepository.findById(id)
+		if (!user) {
+			throw new Error("Usuário não encontrado")
+		}
 
-  async findById(id: string): Promise<User> {
-    const user = await this.userRepository.findById(id);
+		if (input.anon_name && input.anon_name !== user.anon_name) {
+			const existingUser = await this.userRepository.findByAnonName(
+				input.anon_name
+			)
+			if (existingUser) {
+				throw new Error("Este nome de usuário já está em uso")
+			}
+			user.anon_name = input.anon_name
+		}
 
-    if (!user) {
-      throw new Error("Usuário não encontrado");
-    }
+		if (input.password_hash) {
+			user.password_hash = await bcrypt.hash(input.password_hash, 10)
+		}
 
-    return user;
-  }
+		if (input.password_hash) {
+			const isSame = await bcrypt.compare(
+				input.password_hash,
+				user.password_hash
+			)
+			if (isSame) {
+				throw new Error("A nova senha deve ser diferente da senha atual")
+			}
 
-  async find(): Promise<
-    {
-      id: string;
-      anon_name: string;
-      phone_number: string;
-      is_active: boolean;
-    }[]
-  > {
-    const users = await this.userRepository.findAll();
+			user.password_hash = await bcrypt.hash(input.password_hash, 10)
+		}
 
-    return users.map((user) => ({
-      id: user.id,
-      anon_name: user.anon_name,
-      phone_number: user.phone_number,
-      is_active: user.is_active,
-    }));
-  }
+		user.is_active = input.is_active ?? user.is_active
+		user.phone_number = input.phone_number || user.phone_number
 
-  async update(id: string, input: UpdateUserDTO): Promise<User> {
-    const user = await this.userRepository.findById(id);
-    if (!user) {
-      throw new Error("Usuário não encontrado");
-    }
+		return await this.userRepository.update(user)
+	}
 
-    if (input.anon_name && input.anon_name !== user.anon_name) {
-      const existingUser = await this.userRepository.findByAnonName(
-        input.anon_name
-      );
-      if (existingUser) {
-        throw new Error("Este nome de usuário já está em uso");
-      }
-      user.anon_name = input.anon_name;
-    }
+	async delete(id: string): Promise<void> {
+		const user = await this.userRepository.findById(id)
 
-    if (input.password_hash) {
-      user.password_hash = await bcrypt.hash(input.password_hash, 10);
-    }
+		if (!user) {
+			throw new Error("Usuário não encontrado")
+		}
 
-    user.is_active = input.is_active ?? user.is_active;
-    user.phone_number = input.phone_number || user.phone_number;
-
-    return await this.userRepository.update(user);
-  }
-
-  async delete(id: string): Promise<void> {
-    const user = await this.userRepository.findById(id);
-
-    if (!user) {
-      throw new Error("Usuário não encontrado");
-    }
-
-    await this.userRepository.delete(id);
-  }
+		await this.userRepository.delete(id)
+	}
 }
