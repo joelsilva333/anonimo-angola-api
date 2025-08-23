@@ -33,10 +33,6 @@ export class User {
 	@Column()
 	phone_number: string
 
-	@Column({
-		type: "enum",
-		enum: ["user", "admin"],
-		default: "user",
-	})
+	@Column({ type: "varchar", default: "user" })
 	role: UserRole
 }
