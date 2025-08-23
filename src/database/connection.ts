@@ -15,6 +15,10 @@ const AppDataSource = new DataSource({
 	database: process.env.DB_NAME,
 	logging: true,
 	synchronize: !isProd,
+	ssl:
+		process.env.NODE_ENV === "production"
+			? { rejectUnauthorized: false }
+			: false,
 	entities: [
 		isProd
 			? `${process.cwd()}/dist/**/*.entity.js`
