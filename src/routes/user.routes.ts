@@ -27,12 +27,23 @@ const router = Router();
 *         phone_number:
 *           type: string
 *           example: "+5511999999999"
+*         profile_picture:
+*           type: string
+*           example: "http://localhost:8080/public/avatar.png"
 *         role:
 *           type: string
 *           example: "user"
 *         is_active:
 *           type: boolean
 *           example: true
+*         created_at:
+*           type: string
+*           format: date-time
+*           example: "2025-08-21T14:15:22.000Z"
+*         last_login_at:
+*           type: string
+*           format: date-time
+*           example: "2025-08-23T10:00:00.000Z"
 *     UpdateUserInput:
 *       type: object
 *       properties:
@@ -42,6 +53,12 @@ const router = Router();
 *         phone_number:
 *           type: string
 *           example: "+5511888888888"
+*         password_hash:
+*           type: string
+*           example: "novaSenha@123"
+*         is_active:
+*           type: boolean
+*           example: true
 */
 
 /**
@@ -69,7 +86,6 @@ const router = Router();
 *       500:
 *         description: Erro interno do servidor
 */
-router.get("/:id", authMiddleware, userController.getUserById);
 
 /**
 * @swagger
@@ -110,7 +126,6 @@ router.get("/:id", authMiddleware, userController.getUserById);
 *       500:
 *         description: Erro interno do servidor
 */
-router.put("/:id", authMiddleware, userController.updateUser);
 
 /**
 * @swagger
@@ -133,7 +148,6 @@ router.put("/:id", authMiddleware, userController.updateUser);
 *       500:
 *         description: Erro interno do servidor
 */
-router.delete("/:id", authMiddleware, userController.deleteUser);
 
 /**
 * @swagger
@@ -155,6 +169,14 @@ router.delete("/:id", authMiddleware, userController.deleteUser);
 *       500:
 *         description: Erro interno do servidor
 */
+
+
+router.get("/:id", authMiddleware, userController.getUserById);
+
+router.put("/:id", authMiddleware, userController.updateUser);
+
+router.delete("/:id", authMiddleware, userController.deleteUser);
+
 router.get("/", authMiddleware, userController.getAllUsers);
 
 export default router;

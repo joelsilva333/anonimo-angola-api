@@ -55,16 +55,23 @@ const router = Router();
  *                     phone_number:
  *                       type: string
  *                       example: "+244900000000"
+ *                     profile_picture:
+ *                       type: string
+ *                       example: "https://api.adorable.io/avatars/285/joel123.png"
  *                     role:
  *                       type: string
  *                       example: "user"
+ *                     is_active:
+ *                       type: boolean
+ *                       example: true
  *                     created_at:
  *                       type: string
  *                       format: date-time
  *                       example: "2025-08-21T14:15:22.000Z"
- *                     is_active:
- *                       type: boolean
- *                       example: true
+ *                     last_login_at:
+ *                       type: string
+ *                       format: date-time
+ *                       example: "2025-08-23T10:00:00.000Z"
  *                 token:
  *                   type: string
  *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -85,7 +92,6 @@ const router = Router();
  *             example:
  *               error: "Erro interno do servidor"
  */
-router.post("/login", authController.login);
 
 /**
  * @swagger
@@ -101,7 +107,6 @@ router.post("/login", authController.login);
  *             type: object
  *             required:
  *               - anon_name
- *               - phone_number
  *               - password
  *             properties:
  *               anon_name:
@@ -136,12 +141,15 @@ router.post("/login", authController.login);
  *                     phone_number:
  *                       type: string
  *                       example: "+244900000000"
- *                     is_active:
- *                       type: boolean
- *                       example: true
+ *                     profile_picture:
+ *                       type: string
+ *                       example: "https://api.adorable.io/avatars/285/joel123.png"
  *                     role:
  *                       type: string
  *                       example: "user"
+ *                     is_active:
+ *                       type: boolean
+ *                       example: true
  *                     created_at:
  *                       type: string
  *                       format: date-time
@@ -163,6 +171,10 @@ router.post("/login", authController.login);
  *             example:
  *               error: "Erro interno do servidor"
  */
+
+
+router.post("/login", authController.login);
+
 router.post("/register", authController.register);
 
 

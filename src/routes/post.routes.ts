@@ -1,14 +1,60 @@
-import postController from "@/controllers/post.controller";
-import { authMiddleware } from "@/middleware/auth.middleware";
-import { Router } from "express";
+import postController from "@/controllers/post.controller"
+import { authMiddleware } from "@/middleware/auth.middleware"
+import { Router } from "express"
 
-const router = Router();
+const router = Router()
 
 /**
  * @swagger
  * tags:
  *   name: Posts
  *   description: Gerenciamento de posts
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Post:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           example: "abc123"
+ *         anon_name:
+ *           type: string
+ *           example: "joel123"
+ *         text:
+ *           type: string
+ *           example: "Hoje estou me sentindo melhor."
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *           example: "2025-08-21T14:15:22.000Z"
+ *         updated_at:
+ *           type: string
+ *           format: date-time
+ *           example: "2025-08-21T15:00:00.000Z"
+ *         status:
+ *           type: string
+ *           example: "active"
+ *     CreatePostInput:
+ *       type: object
+ *       required:
+ *         - text
+ *       properties:
+ *         text:
+ *           type: string
+ *           example: "Hoje estou me sentindo melhor."
+ *     UpdatePostInput:
+ *       type: object
+ *       properties:
+ *         text:
+ *           type: string
+ *           example: "Texto atualizado do post."
+ *         status:
+ *           type: string
+ *           example: "active"
  */
 
 /**
@@ -31,51 +77,19 @@ const router = Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - text
- *             properties:
- *               text:
- *                 type: string
- *                 example: "Hoje estou me sentindo melhor."
+ *             $ref: '#/components/schemas/CreatePostInput'
  *     responses:
  *       201:
  *         description: Post criado com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                   example: "abc123"
- *                 anon_name:
- *                   type: string
- *                   example: "joel123"
- *                 text:
- *                   type: string
- *                   example: "Hoje estou me sentindo melhor."
- *                 created_at:
- *                   type: string
- *                   format: date-time
- *                   example: "2025-08-21T14:15:22.000Z"
- *                 status:
- *                   type: string
- *                   example: "active"
+ *               $ref: '#/components/schemas/Post'
  *       400:
  *         description: Erro de validação
- *         content:
- *           application/json:
- *             example:
- *               error: "Erro de validação"
- *               details:
- *                 - property: "text"
- *                   constraints:
- *                     isNotEmpty: "text não pode estar vazio"
  *       500:
  *         description: Erro interno do servidor
  */
-router.post("/:id", authMiddleware, postController.create);
 
 /**
  * @swagger
@@ -93,28 +107,10 @@ router.post("/:id", authMiddleware, postController.create);
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                     example: "abc123"
- *                   anon_name:
- *                     type: string
- *                     example: "joel123"
- *                   text:
- *                     type: string
- *                     example: "Hoje estou me sentindo melhor."
- *                   created_at:
- *                     type: string
- *                     format: date-time
- *                     example: "2025-08-21T14:15:22.000Z"
- *                   status:
- *                     type: string
- *                     example: "active"
+ *                 $ref: '#/components/schemas/Post'
  *       500:
  *         description: Erro interno do servidor
  */
-router.get("/", authMiddleware, postController.getAll);
 
 /**
  * @swagger
@@ -137,27 +133,10 @@ router.get("/", authMiddleware, postController.getAll);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                   example: "abc123"
- *                 anon_name:
- *                   type: string
- *                   example: "joel123"
- *                 text:
- *                   type: string
- *                   example: "Hoje estou me sentindo melhor."
- *                 created_at:
- *                   type: string
- *                   example: "2025-08-21T14:15:22.000Z"
- *                 status:
- *                   type: string
- *                   example: "active"
+ *               $ref: '#/components/schemas/Post'
  *       500:
  *         description: Erro interno do servidor
  */
-router.get("/:id", authMiddleware, postController.getById);
 
 /**
  * @swagger
@@ -182,22 +161,10 @@ router.get("/:id", authMiddleware, postController.getById);
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: string
- *                   anon_name:
- *                     type: string
- *                   text:
- *                     type: string
- *                   created_at:
- *                     type: string
- *                   status:
- *                     type: string
+ *                 $ref: '#/components/schemas/Post'
  *       500:
  *         description: Erro interno do servidor
  */
-router.get("/user/:userId", authMiddleware, postController.getAllByUserId);
 
 /**
  * @swagger
@@ -219,45 +186,19 @@ router.get("/user/:userId", authMiddleware, postController.getAllByUserId);
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               text:
- *                 type: string
- *                 example: "Texto atualizado do post."
+ *             $ref: '#/components/schemas/UpdatePostInput'
  *     responses:
  *       200:
  *         description: Post atualizado com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: string
- *                   example: "abc123"
- *                 anon_name:
- *                   type: string
- *                   example: "joel123"
- *                 text:
- *                   type: string
- *                   example: "Texto atualizado do post."
- *                 created_at:
- *                   type: string
- *                   format: date-time
- *                   example: "2025-08-21T14:15:22.000Z"
- *                 updated_at:
- *                   type: string
- *                   format: date-time
- *                   example: "2025-08-21T15:00:00.000Z"
- *                 status:
- *                   type: string
- *                   example: "active"
+ *               $ref: '#/components/schemas/Post'
  *       400:
  *         description: Erro de validação
  *       500:
  *         description: Erro interno do servidor
  */
-router.put("/:id", authMiddleware, postController.updatePost);
 
 /**
  * @swagger
@@ -278,8 +219,19 @@ router.put("/:id", authMiddleware, postController.updatePost);
  *       204:
  *         description: Post deletado com sucesso
  *       500:
- *        description: Erro interno do servidor
+ *         description: Erro interno do servidor
  */
-router.delete("/:id", authMiddleware, postController.deletePost);
 
-export default router;
+router.post("/:id", authMiddleware, postController.create)
+
+router.get("/", authMiddleware, postController.getAll)
+
+router.get("/:id", authMiddleware, postController.getById)
+
+router.get("/user/:userId", authMiddleware, postController.getAllByUserId)
+
+router.put("/:id", authMiddleware, postController.updatePost)
+
+router.delete("/:id", authMiddleware, postController.deletePost)
+
+export default router
