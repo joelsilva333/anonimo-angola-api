@@ -1,4 +1,3 @@
-import "reflect-metadata"
 import { DataSource } from "typeorm"
 import * as dotenv from "dotenv"
 
@@ -20,9 +19,7 @@ const AppDataSource = new DataSource({
 			? { rejectUnauthorized: false }
 			: false,
 	entities: [
-		isProd
-			? `${process.cwd()}/dist/**/*.entity.js`
-			: `${process.cwd()}/src/**/*.entity.ts`,
+		isProd ? `${__dirname}/../entities/*.js` : `${__dirname}/../entities/*.ts`,
 	],
 	migrations: [
 		isProd

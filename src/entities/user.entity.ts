@@ -7,7 +7,7 @@ import {
 
 export type UserRole = "user" | "admin"
 
-@Entity("users")
+@Entity()
 export class User {
   @PrimaryGeneratedColumn("uuid")
   id: string;
