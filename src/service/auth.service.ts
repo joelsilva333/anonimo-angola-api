@@ -45,7 +45,7 @@ export class AuthService {
 
 		const user = new User()
 		user.anon_name = input.anon_name
-		user.profile_picture = `${baseUrl}/${profilePicture}`
+		user.profile_picture = `${baseUrl}${profilePicture}`
 		user.password_hash = await bcrypt.hash(input.password, 10)
 		user.phone_number = input.phone_number || ""
 		user.role = "user"
