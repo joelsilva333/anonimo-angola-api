@@ -30,14 +30,13 @@ export class UserService {
 			is_active: boolean
 		}[]
 	> {
-		const baseUrl = process.env.BASE_URL || "http://localhost:8080/public"
 		const users = await this.userRepository.findAll()
 
 		return users.map((user) => ({
 			id: user.id,
 			anon_name: user.anon_name,
 			phone_number: user.phone_number,
-			profile_picture: `${baseUrl}/${user.profile_picture}`,
+			profile_picture: user.profile_picture,
 			created_at: user.created_at,
 			is_active: user.is_active,
 		}))

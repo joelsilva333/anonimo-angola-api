@@ -39,11 +39,13 @@ export class AuthService {
 			}
 		}
 
+		const baseUrl = process.env.BASE_URL || "http://localhost:8080/public"
+
 		const profilePicture = getRandomAvatar()
 
 		const user = new User()
 		user.anon_name = input.anon_name
-		user.profile_picture = profilePicture
+		user.profile_picture = `${baseUrl}/${profilePicture}`
 		user.password_hash = await bcrypt.hash(input.password, 10)
 		user.phone_number = input.phone_number || ""
 		user.role = "user"
