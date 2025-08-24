@@ -8,7 +8,7 @@ const router = Router()
  * @swagger
  * tags:
  *   name: Posts
- *   description: Gerenciamento de posts
+ *   description: Endpoints para gerenciamento de posts
  */
 
 /**
@@ -21,9 +21,15 @@ const router = Router()
  *         id:
  *           type: string
  *           example: "abc123"
+ *         userId:
+ *           type: string
+ *           example: "user789"
  *         anon_name:
  *           type: string
  *           example: "joel123"
+ *         profile_picture:
+ *           type: string
+ *           example: "https://anonimo-angola.com/avatars/avatar1.png"
  *         text:
  *           type: string
  *           example: "Hoje estou me sentindo melhor."
@@ -37,7 +43,9 @@ const router = Router()
  *           example: "2025-08-21T15:00:00.000Z"
  *         status:
  *           type: string
+ *           enum: [active, deleted, archived]
  *           example: "active"
+ *
  *     CreatePostInput:
  *       type: object
  *       required:
@@ -46,6 +54,7 @@ const router = Router()
  *         text:
  *           type: string
  *           example: "Hoje estou me sentindo melhor."
+ *
  *     UpdatePostInput:
  *       type: object
  *       properties:
@@ -54,7 +63,26 @@ const router = Router()
  *           example: "Texto atualizado do post."
  *         status:
  *           type: string
+ *           enum: [active, deleted, archived]
  *           example: "active"
+ *
+ *     ErrorResponse:
+ *       type: object
+ *       properties:
+ *         error:
+ *           type: string
+ *           example: "Erro de validação"
+ *         details:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               property:
+ *                 type: string
+ *                 example: "text"
+ *               constraints:
+ *                 type: object
+ *                 example: { isNotEmpty: "text should not be empty" }
  */
 
 /**
@@ -87,6 +115,12 @@ const router = Router()
  *               $ref: '#/components/schemas/Post'
  *       400:
  *         description: Erro de validação
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         description: Não autenticado
  *       500:
  *         description: Erro interno do servidor
  */
@@ -108,6 +142,8 @@ const router = Router()
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Post'
+ *       401:
+ *         description: Não autenticado
  *       500:
  *         description: Erro interno do servidor
  */
@@ -134,6 +170,10 @@ const router = Router()
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Post'
+ *       401:
+ *         description: Não autenticado
+ *       404:
+ *         description: Post não encontrado
  *       500:
  *         description: Erro interno do servidor
  */
@@ -142,7 +182,7 @@ const router = Router()
  * @swagger
  * /posts/user/{userId}:
  *   get:
- *     summary: Listar posts por ID de usuário
+ *     summary: Listar posts de um usuário específico
  *     tags: [Posts]
  *     security:
  *       - bearerAuth: []
@@ -162,6 +202,10 @@ const router = Router()
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Post'
+ *       401:
+ *         description: Não autenticado
+ *       404:
+ *         description: Usuário não encontrado
  *       500:
  *         description: Erro interno do servidor
  */
@@ -196,6 +240,12 @@ const router = Router()
  *               $ref: '#/components/schemas/Post'
  *       400:
  *         description: Erro de validação
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Não autorizado
+ *       404:
+ *         description: Post não encontrado
  *       500:
  *         description: Erro interno do servidor
  */
@@ -218,6 +268,12 @@ const router = Router()
  *     responses:
  *       204:
  *         description: Post deletado com sucesso
+ *       401:
+ *         description: Não autenticado
+ *       403:
+ *         description: Não autorizado
+ *       404:
+ *         description: Post não encontrado
  *       500:
  *         description: Erro interno do servidor
  */
