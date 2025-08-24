@@ -1,3 +1,13 @@
+import moduleAlias from "module-alias"
+import * as path from "path"
+
+const isProd = process.env.NODE_ENV === "production"
+
+moduleAlias.addAlias(
+	"@",
+	isProd ? path.join(__dirname) : path.join(__dirname, "..", "src")
+)
+
 import "module-alias/register"
 import "reflect-metadata"
 
@@ -8,7 +18,6 @@ import { setupSwagger } from "./swagger"
 
 import express from "express"
 import cors from "cors"
-import path from "path"
 import "./database/connection"
 import routes from "./routes"
 

@@ -1,5 +1,10 @@
 import { DataSource } from "typeorm"
 import * as dotenv from "dotenv"
+import { Answer } from "@/entities/answer.entity"
+import { Post } from "@/entities/post.entity"
+import { User } from "@/entities/user.entity"
+import { Comment } from "@/entities/comment.entity"
+import { Report } from "@/entities/report.entity"
 
 dotenv.config()
 
@@ -18,9 +23,7 @@ const AppDataSource = new DataSource({
 		process.env.NODE_ENV === "production"
 			? { rejectUnauthorized: false }
 			: false,
-	entities: [
-		isProd ? `${__dirname}/../entities/*.js` : `${__dirname}/../entities/*.ts`,
-	],
+	entities: [User, Post, Comment, Answer, Report],
 	migrations: [
 		isProd
 			? `${process.cwd()}/dist/migrations/*.js`
