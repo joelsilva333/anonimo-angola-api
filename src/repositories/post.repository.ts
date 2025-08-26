@@ -20,7 +20,7 @@ export class PostRepository {
     });
   }
 
-  async findPostByUserId(postId: string, userId: string): Promise<Post | null> {
+  async findByUserId(postId: string, userId: string): Promise<Post | null> {
     return await this.postRepository.findOne({
       where: { id: postId, user: { id: userId } },
     });

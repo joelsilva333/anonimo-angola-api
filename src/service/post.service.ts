@@ -15,7 +15,6 @@ export class PostService {
     this.userRepository = new UserRepository();
 
     leoProfanity.loadDictionary("pt" as any);
-
     leoProfanity.add(badWords);
   }
 
