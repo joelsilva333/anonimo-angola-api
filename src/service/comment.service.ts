@@ -1,32 +1,75 @@
-import { CreateCommentDTO } from "@/dto/comment.dto";
+import { CreateCommentDTO, UpdateCommentDTO } from "@/dto/comment.dto";
 import { Comment } from "@/entities/comment.entity";
 import { CommentRepository } from "@/repositories/comment.repository";
 import { PostRepository } from "@/repositories/post.repository";
-import leoProfanity from "leo-profanity";
+import { UserRepository } from "@/repositories/user.repository";
+import badWordsFilter from "@/utils/bad-words-filter";
 
 export class CommentService {
   private commentRepository: CommentRepository;
   private postRepository: PostRepository;
+  private userRepository: UserRepository;
 
   constructor() {
     this.postRepository = new PostRepository();
     this.commentRepository = new CommentRepository();
+    this.userRepository = new UserRepository();
   }
 
-  async create(postId: string, input: CreateCommentDTO): Promise<Comment> {
+  async create(
+    postId: string,
+    input: CreateCommentDTO,
+    userId: string
+  ): Promise<Comment> {
     const post = await this.postRepository.findByPostId(postId);
 
     if (!post) {
       throw new Error("Post não encontrado");
     }
 
+    if (!input.text) {
+      throw new Error("O comentário não pode estar vazio");
+    }
+
     const comment = new Comment();
+    const user = await this.userRepository.findById(userId);
+
+    if (!user) {
+      throw new Error("Usuário não encontrado");
+    }
 
     comment.post = post;
-    comment.text = leoProfanity.clean(input.text);
+    comment.user = user;
+    comment.text = badWordsFilter(input.text);
     comment.created_at = new Date();
     comment.status = "active";
 
     return this.commentRepository.create(comment);
+  }
+
+  async update(commentId: string, input: UpdateCommentDTO, userId: string): Promise<Comment> {
+    const comment = await this.commentRepository.findById(commentId);
+
+    if (!comment) {
+      throw new Error("Comentário não encontrado");
+    }
+
+    if (userId !== comment.user.id) {
+      throw new Error("Não tem autorização para editar o comentário")
+    }
+
+    comment.text = badWordsFilter(input.text);
+    comment.updated_at = new Date();
+    comment.status = input.status;
+
+    return this.commentRepository.update(comment);
+  }
+
+  async getById(id: string): Promise<Comment | null> {
+    if (!id) {
+      throw new Error("Comentário não encontrado");
+    }
+
+    return this.commentRepository.findById(id);
   }
 }

@@ -14,8 +14,7 @@ export class PostService {
     this.postRepository = new PostRepository();
     this.userRepository = new UserRepository();
 
-    leoProfanity.loadDictionary("pt" as any);
-    leoProfanity.add(badWords);
+  
   }
 
   async create(input: CreatePostDTO, id: string): Promise<Post> {

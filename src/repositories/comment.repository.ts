@@ -13,13 +13,17 @@ export class CommentRepository {
     return this.commentRepository.save(comment);
   }
 
-  /*   async findById(id: string): Promise<Comment | null> {
-    return this.commentRepository.findOne(id)
-  } */
+  async update(comment: Comment): Promise<Comment> {
+    return this.commentRepository.save(comment);
+  }
+
+  async findById(id: string): Promise<Comment | null> {
+    return this.commentRepository.findOne({ where: { id } });
+  }
 
   async findByPostId(postId: string): Promise<Comment | null> {
     return this.commentRepository.findOne({
-      where: { id: postId },
+      where: { post: { id: postId } },
       relations: ["post"],
     });
   }
