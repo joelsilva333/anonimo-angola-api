@@ -49,7 +49,17 @@ class CommentController {
 
       return res.status(201).json({
         message: "Comentário criado com sucesso",
-        comment: this.formatCommentResponse(comment),
+        comment: {
+          id: comment.id,
+          postId: comment.post.id,
+          postUserId: comment.post.user.id,
+          userId: comment.user.id,
+          anon_name: comment.user.anon_name,
+          profile_picture: comment.user.profile_picture,
+          text: comment.text,
+          created_at: comment.created_at,
+          updated_at: comment.updated_at,
+        },
       });
     } catch (error) {
       console.error(error);
@@ -62,14 +72,10 @@ class CommentController {
 
   update = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const userId = req.anon_name?.id;
+      const { id: userId } = req.anon_name;
       const { commentId, text } = req.body;
-
-      if (!userId) {
-        return res.status(401).json({ error: "Usuário não autenticado" });
-      }
-
       const dto = plainToInstance(UpdateCommentDTO, req.body);
+
       const errors = await validate(dto);
       if (errors.length > 0) {
         return res.status(400).json({
@@ -85,7 +91,17 @@ class CommentController {
 
       return res.status(200).json({
         message: "Comentário editado com sucesso",
-        comment: comment,
+        comment: {
+          id: comment.id,
+          postId: comment.post.id,
+          postUserId: comment.post.user.id,
+          userId: comment.user.id,
+          anon_name: comment.user.anon_name,
+          profile_picture: comment.user.profile_picture,
+          text: comment.text,
+          created_at: comment.created_at,
+          updated_at: comment.updated_at,
+        },
       });
     } catch (error) {
       console.error(error);
@@ -95,20 +111,6 @@ class CommentController {
       });
     }
   };
-
-  private formatCommentResponse(comment: Comment) {
-    return {
-      id: comment.id,
-      postId: comment.post.id,
-      postUserId: comment.post.user.id,
-      userId: comment.user.id,
-      anon_name: comment.user.anon_name,
-      profile_picture: comment.user.profile_picture,
-      text: comment.text,
-      created_at: comment.created_at,
-      updated_at: comment.updated_at,
-    };
-  }
 }
 
 export default new CommentController();

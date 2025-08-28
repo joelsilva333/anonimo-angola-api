@@ -47,7 +47,11 @@ export class CommentService {
     return this.commentRepository.create(comment);
   }
 
-  async update(commentId: string, input: UpdateCommentDTO, userId: string): Promise<Comment> {
+  async update(
+    commentId: string,
+    input: UpdateCommentDTO,
+    userId: string
+  ): Promise<Comment> {
     const comment = await this.commentRepository.findById(commentId);
 
     if (!comment) {
@@ -55,11 +59,17 @@ export class CommentService {
     }
 
     if (userId !== comment.user.id) {
-      throw new Error("Não tem autorização para editar o comentário")
+      throw new Error("Não tem autorização para editar o comentário");
     }
 
-    comment.text = badWordsFilter(input.text);
-    comment.updated_at = new Date();
+    if (input.text) {
+      comment.text = badWordsFilter(input.text);
+    }
+
+    if (input.status) {
+      comment.status = input.status;
+    }
+
     comment.status = input.status;
 
     return this.commentRepository.update(comment);

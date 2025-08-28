@@ -18,13 +18,9 @@ export class CommentRepository {
   }
 
   async findById(id: string): Promise<Comment | null> {
-    return this.commentRepository.findOne({ where: { id } });
-  }
-
-  async findByPostId(postId: string): Promise<Comment | null> {
     return this.commentRepository.findOne({
-      where: { post: { id: postId } },
-      relations: ["post"],
+      where: { id },
+      relations: ["user", "post", "post.user"],
     });
   }
 }

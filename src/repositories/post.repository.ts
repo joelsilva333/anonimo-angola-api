@@ -29,14 +29,14 @@ export class PostRepository {
   async findAllByUserId(userId: string): Promise<Post[]> {
     return await this.postRepository.find({
       where: { user: { id: userId } },
-      relations: ["user"],
+      relations: ["user", "comments", "comments.user"],
       order: { created_at: "DESC" },
     });
   }
 
   async findAll(): Promise<Post[]> {
     return await this.postRepository.find({
-      relations: ["user"],
+      relations: ["user", "comments", "comments.user"],
       order: { created_at: "DESC" },
     });
   }
