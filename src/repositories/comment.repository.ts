@@ -17,6 +17,10 @@ export class CommentRepository {
     return this.commentRepository.save(comment);
   }
 
+  async delete(id: string): Promise<void> {
+    await this.commentRepository.delete(id);
+  }
+
   async findById(id: string): Promise<Comment | null> {
     return this.commentRepository.findOne({
       where: { id },

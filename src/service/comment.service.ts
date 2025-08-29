@@ -82,4 +82,24 @@ export class CommentService {
 
     return this.commentRepository.findById(id);
   }
+
+  async delete(id: string, userId: string): Promise<void> {
+    const user = await this.userRepository.findById(userId);
+
+    if (!user) {
+      throw new Error("Usuário não encontrado");
+    }
+
+    const comment = await this.commentRepository.findById(id);
+
+    if (!comment) {
+      throw new Error("Comentário não encontrado");
+    }
+
+    if (userId !== comment.post.user.id && userId !== comment.user.id) {
+      throw new Error("Não tem permissão para apagar o comentário");
+    }
+
+    await this.commentRepository.delete(id);
+  }
 }

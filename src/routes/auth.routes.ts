@@ -12,6 +12,58 @@ const router = Router();
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     AuthLoginInput:
+ *       type: object
+ *       required:
+ *         - anon_name
+ *         - password
+ *       properties:
+ *         anon_name:
+ *           type: string
+ *           example: "joel123"
+ *         password:
+ *           type: string
+ *           example: "minhaSenha@123"
+ *     AuthLoginResponse:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           example: "Sessão iniciada com sucesso"
+ *         user:
+ *           $ref: '#/components/schemas/User'
+ *         token:
+ *           type: string
+ *           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *     AuthRegisterInput:
+ *       type: object
+ *       required:
+ *         - anon_name
+ *         - password
+ *       properties:
+ *         anon_name:
+ *           type: string
+ *           example: "joel123"
+ *         phone_number:
+ *           type: string
+ *           example: "+244900000000"
+ *         password:
+ *           type: string
+ *           example: "minhaSenha@123"
+ *     AuthRegisterResponse:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           example: "Usuário criado com sucesso"
+ *         user:
+ *           $ref: '#/components/schemas/User'
+ */
+
+/**
+ * @swagger
  * /auth/login:
  *   post:
  *     summary: Fazer login e receber JWT
@@ -21,76 +73,18 @@ const router = Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - anon_name
- *               - password
- *             properties:
- *               anon_name:
- *                 type: string
- *                 example: "joel123"
- *               password:
- *                 type: string
- *                 example: "minhaSenha@123"
+ *             $ref: '#/components/schemas/AuthLoginInput'
  *     responses:
  *       200:
  *         description: Sessão iniciada com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Sessão iniciada com sucesso"
- *                 user:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       example: "c0a80123-ab12-4f56-9abc-987654321000"
- *                     anon_name:
- *                       type: string
- *                       example: "joel123"
- *                     phone_number:
- *                       type: string
- *                       example: "+244900000000"
- *                     profile_picture:
- *                       type: string
- *                       example: "https://api.adorable.io/avatars/285/joel123.png"
- *                     role:
- *                       type: string
- *                       example: "user"
- *                     is_active:
- *                       type: boolean
- *                       example: true
- *                     created_at:
- *                       type: string
- *                       format: date-time
- *                       example: "2025-08-21T14:15:22.000Z"
- *                     last_login_at:
- *                       type: string
- *                       format: date-time
- *                       example: "2025-08-23T10:00:00.000Z"
- *                 token:
- *                   type: string
- *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *               $ref: '#/components/schemas/AuthLoginResponse'
  *       400:
- *         description: Erro de validação
- *         content:
- *           application/json:
- *             example:
- *               error: "Erro de validação"
- *               details:
- *                 - property: "anon_name"
- *                   constraints:
- *                     isNotEmpty: "anon_name não pode estar vazio"
+ *         $ref: '#/components/responses/ValidationError'
  *       500:
  *         description: Erro interno do servidor
- *         content:
- *           application/json:
- *             example:
- *               error: "Erro interno do servidor"
  */
 
 /**
@@ -104,74 +98,19 @@ const router = Router();
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - anon_name
- *               - password
- *             properties:
- *               anon_name:
- *                 type: string
- *                 example: "joel123"
- *               phone_number:
- *                 type: string
- *                 example: "+244900000000"
- *               password:
- *                 type: string
- *                 example: "minhaSenha@123"
+ *             $ref: '#/components/schemas/AuthRegisterInput'
  *     responses:
  *       201:
  *         description: Usuário criado com sucesso
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Usuário criado com sucesso"
- *                 user:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       example: "c0a80123-ab12-4f56-9abc-987654321000"
- *                     anon_name:
- *                       type: string
- *                       example: "joel123"
- *                     phone_number:
- *                       type: string
- *                       example: "+244900000000"
- *                     profile_picture:
- *                       type: string
- *                       example: "https://api.adorable.io/avatars/285/joel123.png"
- *                     role:
- *                       type: string
- *                       example: "user"
- *                     is_active:
- *                       type: boolean
- *                       example: true
- *                     created_at:
- *                       type: string
- *                       format: date-time
- *                       example: "2025-08-21T14:15:22.000Z"
+ *               $ref: '#/components/schemas/AuthRegisterResponse'
  *       400:
- *         description: Erro de validação
- *         content:
- *           application/json:
- *             example:
- *               error: "Erro de validação"
- *               details:
- *                 - property: "phone_number"
- *                   constraints:
- *                     isNotEmpty: "phone_number não pode estar vazio"
+ *         $ref: '#/components/responses/ValidationError'
  *       500:
  *         description: Erro interno do servidor
- *         content:
- *           application/json:
- *             example:
- *               error: "Erro interno do servidor"
  */
-
 
 router.post("/login", authController.login);
 

@@ -161,7 +161,7 @@ class PostController {
             text: comment.text,
             created_at: comment.created_at,
             updated_at: comment.updated_at,
-            status: comment.status
+            status: comment.status,
           })),
         }))
       );

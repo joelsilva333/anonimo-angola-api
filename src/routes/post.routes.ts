@@ -15,6 +15,37 @@ const router = Router()
  * @swagger
  * components:
  *   schemas:
+ *     Comment:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           example: "cmt789"
+ *         userId:
+ *           type: string
+ *           example: "usr123"
+ *         anon_name:
+ *           type: string
+ *           example: "joel123"
+ *         profile_picture:
+ *           type: string
+ *           example: "https://anonimo-angola.com/avatars/avatar1.png"
+ *         text:
+ *           type: string
+ *           example: "Concordo totalmente contigo!"
+ *         created_at:
+ *           type: string
+ *           format: date-time
+ *           example: "2025-08-22T10:00:00.000Z"
+ *         updated_at:
+ *           type: string
+ *           format: date-time
+ *           example: "2025-08-22T11:00:00.000Z"
+ *         status:
+ *           type: string
+ *           enum: [active, deleted, archived]
+ *           example: "active"
+ *
  *     Post:
  *       type: object
  *       properties:
@@ -45,6 +76,10 @@ const router = Router()
  *           type: string
  *           enum: [active, deleted, archived]
  *           example: "active"
+ *         comments:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Comment'
  *
  *     CreatePostInput:
  *       type: object
@@ -65,24 +100,6 @@ const router = Router()
  *           type: string
  *           enum: [active, deleted, archived]
  *           example: "active"
- *
- *     ErrorResponse:
- *       type: object
- *       properties:
- *         error:
- *           type: string
- *           example: "Erro de validação"
- *         details:
- *           type: array
- *           items:
- *             type: object
- *             properties:
- *               property:
- *                 type: string
- *                 example: "text"
- *               constraints:
- *                 type: object
- *                 example: { isNotEmpty: "text should not be empty" }
  */
 
 /**
@@ -114,11 +131,7 @@ const router = Router()
  *             schema:
  *               $ref: '#/components/schemas/Post'
  *       400:
- *         description: Erro de validação
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *         $ref: '#/components/responses/ValidationError'
  *       401:
  *         description: Não autenticado
  *       500:
@@ -239,7 +252,7 @@ const router = Router()
  *             schema:
  *               $ref: '#/components/schemas/Post'
  *       400:
- *         description: Erro de validação
+ *         $ref: '#/components/responses/ValidationError'
  *       401:
  *         description: Não autenticado
  *       403:
@@ -277,6 +290,7 @@ const router = Router()
  *       500:
  *         description: Erro interno do servidor
  */
+
 
 router.post("/:id", authMiddleware, postController.create)
 

@@ -111,6 +111,23 @@ class CommentController {
       });
     }
   };
+
+  delete = async (req: Request, res: Response): Promise<Response> => {
+    try {
+       const { id: userId } = req.anon_name;
+      const { id } = req.params;
+
+      await this.commentService.delete(id, userId);
+
+      return res.status(204).send();
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        error:
+          error instanceof Error ? error.message : "Erro interno do servidor",
+      });
+    }
+  };
 }
 
 export default new CommentController();
